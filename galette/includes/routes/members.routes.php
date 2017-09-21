@@ -1585,6 +1585,11 @@ $app->post(
                     ->withHeader('Location', $this->router->pathFor('removeMembers'));
             }
 
+            if (isset($post['masschange'])) {
+                return $response
+                    ->withStatus(301)
+                    ->withHeader('Location', $this->router->pathFor('masschangeMembers'));
+            }
         } else {
             $this->flash->addMessage(
                 'error_detected',
@@ -2708,3 +2713,52 @@ $app->get(
         }
     }
 )->setName('getDynamicFile')->add($authenticate);
+
+$app->get(
+    __('/members', 'routes') . __('/mass-change', 'routes'),
+    function ($request, $response) {
+        $filters =  $this->session->filter_members;
+
+        $data = [
+            'id'            => $filters->selected,
+            'redirect_uri'  => $this->router->pathFor('members')
+        ];
+
+
+        // display page
+        $this->view->render(
+            $response,
+            'mass_change_members.tpl',
+            array(
+                'mode'          => $request->isXhr() ? 'ajax' : '',
+                'page_title'    => _T('Mass change members'),
+                'message'       => str_replace(
+                    '%count',
+                    count($data['id']),
+                    _T('Editing %count members.')
+                ),
+                'form_url'      => $this->router->pathFor('massstoremembers'),
+                'cancel_uri'    => $this->router->pathFor('members'),
+                'data'          => $data
+            )
+        );
+        return $response;
+    }
+)->setName('masschangeMembers')->add($authenticate);
+
+$app->post(
+    __('/members', 'routes') . __('/mass-change', 'routes'),
+    function ($request, $response, $args) {
+        if ($this->login->isAdmin() || $this->login->isStaff() || $this->login->isGroupManager()) {
+            echo 'WIP';
+        } else {
+            $this->flash->addMessage(
+                'error_detected',
+                _T('Permission denied!')
+            );
+            return $response
+                ->withStatus(301)
+                ->withHeader('Location', $this->router->pathFor('members'));
+        }
+    }
+)->setName('massstoremembers')->add($authenticate);

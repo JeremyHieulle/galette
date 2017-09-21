@@ -219,6 +219,7 @@
             <li>{_T string="For the selection:"}</li>
     {if $login->isAdmin() or $login->isStaff()}
             <li><input type="submit" id="delete" name="delete" value="{_T string="Delete"}"/></li>
+            <li><input type="submit" id="masschange" class="button" name="masschange" value="{_T string="Mass change"}"/></li>
         {if $pref_mail_method neq constant('Galette\Core\GaletteMail::METHOD_DISABLED')}
             <li><input type="submit" id="sendmail" name="mailing" value="{_T string="Mail"}"/></li>
         {/if}
