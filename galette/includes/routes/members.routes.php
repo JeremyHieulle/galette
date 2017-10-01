@@ -2724,6 +2724,67 @@ $app->get(
             'redirect_uri'  => $this->router->pathFor('members')
         ];
 
+        //we want only visibles fields
+        $fields = $this->members_fields;
+        $fc = $this->fields_config;
+        $visibles = $fc->getVisibilities();
+        $access_level = $this->login->getAccessLevel();
+
+        //remove not searchable fields
+        unset($fields['mdp_adh']);
+
+        foreach ($fields as $k => $f) {
+            if ($visibles[$k] == FieldsConfig::NOBODY ||
+                ($visibles[$k] == FieldsConfig::ADMIN &&
+                    $access_level < Authentication::ACCESS_ADMIN) ||
+                ($visibles[$k] == FieldsConfig::STAFF &&
+                    $access_level < Authentication::ACCESS_STAFF) ||
+                ($visibles[$k] == FieldsConfig::MANAGER &&
+                    $access_level < Authentication::ACCESS_MANAGER)
+            ) {
+                unset($fields[$k]);
+            }
+        }
+
+        $mass_fields = [
+            'titre_adh',
+            'sexe_adh',
+            'pref_lang',
+            'cp_adh',
+            'ville_adh',
+            'pays_adh',
+            'bool_display_info',
+            'activite_adh',
+            Status::PK,
+            'bool_admin_adh',
+            'bool_exempt_adh',
+        ];
+        $fields = array_intersect_key($fields, array_flip($mass_fields));
+
+        $fc = $this->fields_config;
+        foreach ($mass_fields as $mass_field) {
+            $fc->setNotRequired($mass_field);
+        }
+        $form_elements = $fc->getFormElements($this->login, false);
+        unset($form_elements['hiddens']);
+
+        foreach ($form_elements['fieldsets'] as &$form_element) {
+            $form_element->elements = array_intersect_key($form_element->elements, array_flip($mass_fields));
+        }
+
+        //dynamic fields
+        $deps = array(
+            'picture'   => false,
+            'groups'    => false,
+            'dues'      => false,
+            'parent'    => false,
+            'children'  => false,
+            'dynamics'  => false
+        );
+        $member = new Adherent($this->zdb, null, $deps);
+
+        //Status
+        $statuts = new Status($this->zdb);
 
         // display page
         $this->view->render(
@@ -2739,7 +2800,11 @@ $app->get(
                 ),
                 'form_url'      => $this->router->pathFor('massstoremembers'),
                 'cancel_uri'    => $this->router->pathFor('members'),
-                'data'          => $data
+                'data'          => $data,
+                'member'        => $member,
+                'fieldsets'     => $form_elements['fieldsets'],
+                'titles_list'   => Titles::getList($this->zdb),
+                'statuts'       => $statuts->getList()
             )
         );
         return $response;

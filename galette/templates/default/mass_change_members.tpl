@@ -10,6 +10,8 @@
         {if $mode neq 'ajax'}<h2>{$page_title}</h2>{/if}
         {if isset($message)}<p>{$message}</p>{/if}
         <div class="button-container">
+    {* Form entries*}
+    {include file="forms_types.tpl" masschange=true}
             <input type="submit" id="masschange" class="button" value="{_T string="Edit"}"/>
             <a href="{$cancel_uri}" class="button" id="btncancel">{_T string="Cancel"}</a>
             <input type="hidden" name="confirm" value="1"/>
