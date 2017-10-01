@@ -2792,11 +2792,10 @@ $app->get(
             'mass_change_members.tpl',
             array(
                 'mode'          => $request->isXhr() ? 'ajax' : '',
-                'page_title'    => _T('Mass change members'),
-                'message'       => str_replace(
+                'page_title'    => str_replace(
                     '%count',
                     count($data['id']),
-                    _T('Editing %count members.')
+                    _T('Mass change %count members')
                 ),
                 'form_url'      => $this->router->pathFor('massstoremembers'),
                 'cancel_uri'    => $this->router->pathFor('members'),

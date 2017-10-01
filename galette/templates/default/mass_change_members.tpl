@@ -8,7 +8,6 @@
     <div id="mass_change"{if $mode neq 'ajax'} class="center"{else} title="{$page_title}"{/if}>
     <form action="{$form_url}" method="post">
         {if $mode neq 'ajax'}<h2>{$page_title}</h2>{/if}
-        {if isset($message)}<p>{$message}</p>{/if}
         <div class="button-container">
     {* Form entries*}
     {include file="forms_types.tpl" masschange=true}
