@@ -100,6 +100,11 @@
                             {assign var="value" value=$member->$propname}
                         {/if}
 
+                        {if isset($masschange)}
+                            {* Add a checkbox for fields to change on mass edition *}
+                            <input type="checkbox" name="mass_{$entry->field_id}"/>
+                        {/if}
+
                         {include
                             file="forms_types/$template"
                             name=$entry->field_id
