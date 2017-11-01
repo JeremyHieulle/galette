@@ -393,17 +393,19 @@
         $('#masschange').off('click').on('click', function(event) {
             event.preventDefault();
             var _this = $(this);
-            var _selecteds = [];
-            $('table.listing').find('input[type=checkbox]:checked').each(function(){
-                _selecteds.push($(this).val());
-            });
 
+            if (!_checkselection()) {
+                return false;
+            }
             $.ajax({
-                url: '{path_for name="masschangeMembers"}',
-                type: "GET",
+                url: '{path_for name="batch-memberslist"}',
+                type: "POST",
                 data: {
                     ajax: true,
-                    selection: _selecteds
+                    masschange: true,
+                    member_sel: $('#listform input[type=\"checkbox\"]:checked').map(function(){
+                        return $(this).val();
+                    }).get()
                 },
                 datatype: 'json',
                 {include file="js_loader.tpl"},
