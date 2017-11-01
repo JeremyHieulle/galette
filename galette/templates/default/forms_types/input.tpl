@@ -6,7 +6,7 @@
         <label for="{$id}"{if isset($title)} title="{$title}"{/if}{if isset($tip) or isset($labelclass)} class="{if isset($tip)}tooltip{/if} {if isset($labelclass)}{$labelclass}{/if}"{/if}>
         {if $masschange}
             {* Add a checkbox for fields to change on mass edition *}
-            <input type="checkbox" name="mass_{$entry->field_id}"/>
+            <input type="checkbox" name="mass_{$entry->field_id}" class="mass_checkbox"/>
         {/if}
             {$label}
         </label>

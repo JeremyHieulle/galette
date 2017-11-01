@@ -8,6 +8,7 @@
     <div id="mass_change"{if $mode neq 'ajax'} class="center"{else} title="{$page_title}"{/if}>
     <form action="{$form_url}" method="post">
         {if $mode neq 'ajax'}<h2>{$page_title}</h2>{/if}
+        <p>{_T string="Only checked fields will be updated."}</p>
         <div class="button-container">
     {* Form entries*}
     {include file="forms_types.tpl" masschange=true}

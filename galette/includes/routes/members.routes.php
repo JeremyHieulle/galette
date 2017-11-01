@@ -364,6 +364,7 @@ $app->get(
                 'page_title'            => _T("Members management"),
                 'require_dialog'        => true,
                 'require_calendar'      => true,
+                'require_mass'          => true,
                 'members'               => $members_list,
                 'filter_groups_options' => $groups_list,
                 'nb_members'            => $members->getCount(),
@@ -2803,7 +2804,8 @@ $app->get(
                 'member'        => $member,
                 'fieldsets'     => $form_elements['fieldsets'],
                 'titles_list'   => Titles::getList($this->zdb),
-                'statuts'       => $statuts->getList()
+                'statuts'       => $statuts->getList(),
+                'require_mass'  => true
             )
         );
         return $response;

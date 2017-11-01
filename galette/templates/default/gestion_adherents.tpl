@@ -393,12 +393,17 @@
         $('#masschange').off('click').on('click', function(event) {
             event.preventDefault();
             var _this = $(this);
+            var _selecteds = [];
+            $('table.listing').find('input[type=checkbox]:checked').each(function(){
+                _selecteds.push($(this).val());
+            });
 
             $.ajax({
                 url: '{path_for name="masschangeMembers"}',
                 type: "GET",
                 data: {
                     ajax: true,
+                    selection: _selecteds
                 },
                 datatype: 'json',
                 {include file="js_loader.tpl"},
@@ -446,6 +451,7 @@
                     $('body').append(_res);
 
                     _initTooltips('#mass_change');
+                    _massCheckboxes('#mass_change');
 
                     _res.dialog({
                         width: 'auto',
