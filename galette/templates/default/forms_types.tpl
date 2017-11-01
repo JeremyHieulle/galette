@@ -100,9 +100,8 @@
                             {assign var="value" value=$member->$propname}
                         {/if}
 
-                        {if isset($masschange)}
-                            {* Add a checkbox for fields to change on mass edition *}
-                            <input type="checkbox" name="mass_{$entry->field_id}"/>
+                        {if !isset($masschange)}
+                           {assign var="masschange" value=false}
                         {/if}
 
                         {include
@@ -119,6 +118,7 @@
                             tip=$tip
                             compile_id="input_{$entry->field_id}"
                             checked=$checked
+                            masschange=$masschange
                         }
                     {/if}
                 {/foreach}
