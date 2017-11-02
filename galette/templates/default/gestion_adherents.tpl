@@ -390,6 +390,18 @@
         {include file="js_removal.tpl"}
         {include file="js_removal.tpl" selector="#delete" deleteurl="'{path_for name="batch-memberslist"}'" extra_check="if (!_checkselection()) {ldelim}return false;{rdelim}" extra_data="delete: true, member_sel: $('#listform input[type=\"checkbox\"]:checked').map(function(){ return $(this).val(); }).get()" method="POST"}
 
+        var _bindmassres = function(res) {
+            res.find('#btncancel')
+                .button()
+                .on('click', function(e) {
+                    e.preventDefault();
+                    res.dialog('close');
+                });
+
+            res.find('input[type=submit]')
+                .button();
+        }
+
         $('#masschange').off('click').on('click', function(event) {
             event.preventDefault();
             var _this = $(this);
@@ -411,15 +423,7 @@
                 {include file="js_loader.tpl"},
                 success: function(res){
                     var _res = $(res);
-                    _res.find('#btncancel')
-                        .button()
-                        .on('click', function(e) {
-                            e.preventDefault();
-                            _res.dialog('close');
-                        });
-
-                    _res.find('input[type=submit]')
-                        .button();
+                    _bindmassres(_res);
 
                     _res.find('form').on('submit', function(e) {
                         e.preventDefault();
@@ -431,18 +435,49 @@
                             data: _data,
                             datatype: 'json',
                             {include file="js_loader.tpl"},
-                            success: function(res){
-                                if (res.success) {
-                                    window.location.href = _form.find('input[name=redirect_uri]').val();
-                                } else {
+                            success: function(html) {
+                                var _html = $(html);
+                                _bindmassres(_html);
+
+                                $('#mass_change').remove();
+                                $('body').append(_html);
+
+                                _initTooltips('#mass_change');
+                                //_massCheckboxes('#mass_change');
+
+                                _html.dialog({
+                                    width: 'auto',
+                                    modal: true,
+                                    close: function(event, ui){
+                                        $(this).dialog('destroy').remove()
+                                    }
+                                });
+
+                                _html.find('form').on('submit', function(e) {
+                                    e.preventDefault();
+                                    var _form = $(this);
+                                    var _data = _form.serialize();
                                     $.ajax({
-                                        url: '{path_for name="ajaxMessages"}',
-                                        method: "GET",
-                                        success: function (message) {
-                                            $('#asso_name').after(message);
+                                        url: _form.attr('action'),
+                                        type: "POST",
+                                        data: _data,
+                                        datatype: 'json',
+                                        {include file="js_loader.tpl"},
+                                        success: function(res) {
+                                            if (res.success) {
+                                                window.location.href = _form.find('input[name=redirect_uri]').val();
+                                            } else {
+                                                $.ajax({
+                                                    url: '{path_for name="ajaxMessages"}',
+                                                    method: "GET",
+                                                    success: function (message) {
+                                                        $('#asso_name').after(message);
+                                                    }
+                                                });
+                                            }
                                         }
                                     });
-                                }
+                                });
                             },
                             error: function() {
                                 alert("{_T string="An error occured :(" escape="js"}");

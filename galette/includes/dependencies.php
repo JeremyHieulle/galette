@@ -322,7 +322,8 @@ $container['acls'] = function ($c) {
         'telemetrySend'             => 'admin',
         'setRegistered'             => 'admin',
         'masschangeMembers'         => 'groupmanager',
-        'massstoremembers'          => 'groupmanager'
+        'massstoremembers'          => 'groupmanager',
+        'masschangeMembersReview'   => 'groupmanager'
     ];
 
     foreach ($c['plugins']->getModules() as $plugin) {
