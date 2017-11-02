@@ -895,8 +895,8 @@ class FieldsConfig
      * Get fields for massive changes
      * @see FieldsConfig::getFormElements
      *
-     * @param array   $fields Member fields
-     * @param Login   $login  Login instance
+     * @param array $fields Member fields
+     * @param Login $login  Login instance
      *
      * @return array
      */
