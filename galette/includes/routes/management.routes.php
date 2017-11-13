@@ -2769,6 +2769,7 @@ $app->get(
             'categories'            => FieldsCategories::getList($this->zdb),
             'categorized_fields'    => $fc->getCategorizedFields(),
             'non_required'          => $fc->getNonRequired(),
+            'non_hidden'            => $fc->getNonHidden(),
             'require_dialog'        => true,
             'require_sorter'        => true
         ];

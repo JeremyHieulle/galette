@@ -121,6 +121,20 @@ class FieldsConfig
         'parent_id'
     );
 
+    /**
+     * Fields available on members list
+     * cannot be set : NOBODY
+     */
+    private $non_hidden = array(
+        'nom_adh',
+        'pseudo_adh',
+        'id_statut',
+        'date_modif_adh',
+        //Additional fields on public pages
+        'email_adh',
+        'info_public_adh'
+    );
+
     private $non_form_elements = array(
         'date_echeance',
         'date_modif_adh'
@@ -403,6 +417,16 @@ class FieldsConfig
     public function getNonRequired()
     {
         return $this->non_required;
+    }
+
+    /**
+     * Get non_hidden fields
+     *
+     * @return array
+     */
+    public function getNonHidden()
+    {
+        return $this->non_hidden;
     }
 
     /**
